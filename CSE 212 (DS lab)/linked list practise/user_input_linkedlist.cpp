@@ -49,3 +49,6 @@ int main()
 
     return 0;
 }
+//https://ideone.com/tZjvl0
+//https://www.programiz.com/online-compiler/8oGiwTqw0EWlI
+//https://onlinegdb.com/HLYdshaYy
