@@ -1,0 +1,297 @@
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+// Abstract Base Class
+class Course
+{
+protected:
+    string studentName;
+    int studentId;
+    double gradePoint;
+
+public:
+    Course(string name, int id, double gp)
+    {
+        studentName = name;
+        studentId = id;
+        gradePoint = gp;
+    }
+
+    // Pure Virtual Functions
+    virtual double calculateCGPA() = 0;
+    virtual string getCourseName() = 0;
+    virtual double getGradePoint() = 0;
+
+    // Function Overloading
+    void result(int marks)
+    {
+        cout << "Result by Marks: " << marks << endl;
+    }
+
+    void result(double gp)
+    {
+        cout << "Result by Grade Point: " << gp << endl;
+    }
+
+    // Virtual Destructor
+    virtual ~Course()
+    {
+    }
+};
+
+
+// Project Course
+class ProjectCourse : public Course
+{
+public:
+    ProjectCourse(string name, int id, double gp)
+        : Course(name, id, gp)
+    {
+    }
+
+    double calculateCGPA() override
+    {
+        return gradePoint;
+    }
+
+    string getCourseName() override
+    {
+        return "Project Course";
+    }
+
+    double getGradePoint() override
+    {
+        return gradePoint;
+    }
+};
+
+
+// Theory Course
+class TheoryCourse : public Course
+{
+public:
+    TheoryCourse(string name, int id, double gp)
+        : Course(name, id, gp)
+    {
+    }
+
+    double calculateCGPA() override
+    {
+        return gradePoint;
+    }
+
+    string getCourseName() override
+    {
+        return "Theory Course";
+    }
+
+    double getGradePoint() override
+    {
+        return gradePoint;
+    }
+};
+
+
+// Lab Course
+class LabCourse : public Course
+{
+public:
+    LabCourse(string name, int id, double gp)
+        : Course(name, id, gp)
+    {
+    }
+
+    double calculateCGPA() override
+    {
+        return gradePoint;
+    }
+
+    string getCourseName() override
+    {
+        return "Lab Course";
+    }
+
+    double getGradePoint() override
+    {
+        return gradePoint;
+    }
+};
+
+
+int main()
+{
+    // Array of Base Class Pointers
+    Course *courses[100];
+
+    int count = 0;
+
+    // File Handling
+    ofstream file("university_results.txt", ios::app);
+
+    int choice;
+
+    cout << "========== UNIVERSITY COURSE MANAGEMENT SYSTEM ==========\n";
+
+    cout << "\nSelect Course Type:\n";
+    cout << "1. Project Course\n";
+    cout << "2. Theory Course\n";
+    cout << "3. Lab Course\n";
+
+    cout << "\nChoice: ";
+    cin >> choice;
+
+
+    // User Input
+    string name;
+    int id;
+    int inputType;
+    double gradePoint;
+    int marks;
+
+    cout << "\nEnter Student Name: ";
+    cin >> name;
+
+    cout << "\nEnter Student ID: ";
+    cin >> id;
+
+    cout << "\nResult Input Type:\n";
+    cout << "1. Grade Point\n";
+    cout << "2. Marks\n";
+
+    cout << "\nChoice: ";
+    cin >> inputType;
+
+
+    // If user gives Grade Point
+    if(inputType == 1)
+    {
+        cout << "\nEnter Grade Point: ";
+        cin >> gradePoint;
+    }
+    else
+    {
+        cout << "\nEnter Marks: ";
+        cin >> marks;
+
+        // Convert marks to grade point
+        if(marks >= 80)
+            gradePoint = 4.00;
+        else if(marks >= 75)
+            gradePoint = 3.75;
+        else if(marks >= 70)
+            gradePoint = 3.50;
+        else if(marks >= 65)
+            gradePoint = 3.25;
+        else if(marks >= 60)
+            gradePoint = 3.00;
+        else if(marks >= 55)
+            gradePoint = 2.75;
+        else if(marks >= 50)
+            gradePoint = 2.50;
+        else if(marks >= 45)
+            gradePoint = 2.25;
+        else if(marks >= 40)
+            gradePoint = 2.00;
+        else
+            gradePoint = 0.00;
+    }
+
+
+    // Dynamic Allocation
+    if(choice == 1)
+    {
+        courses[count] = new ProjectCourse(name, id, gradePoint);
+    }
+    else if(choice == 2)
+    {
+        courses[count] = new TheoryCourse(name, id, gradePoint);
+    }
+    else if(choice == 3)
+    {
+        courses[count] = new LabCourse(name, id, gradePoint);
+    }
+    else
+    {
+        cout << "Invalid Choice!" << endl;
+        return 0;
+    }
+
+    count++;
+
+
+    // Display Course Information
+    cout << "\nCourse: "
+         << courses[count - 1]->getCourseName()
+         << endl;
+
+    cout << "Student Name: "
+         << name
+         << endl;
+
+    cout << "Student ID: "
+         << id
+         << endl;
+
+
+    // Function Overloading
+    if(inputType == 1)
+    {
+        courses[count - 1]->result(gradePoint);
+    }
+    else
+    {
+        courses[count - 1]->result(marks);
+    }
+
+
+    // Calculate CGPA
+    double cgpa =
+        courses[count - 1]->calculateCGPA();
+
+
+    cout << "\nCalculated CGPA = "
+         << cgpa
+         << endl;
+
+    cout << "\nResult saved successfully!\n";
+
+
+    // Save Result in File
+    file << "Student Name: "
+         << name
+         << " - Student ID: "
+         << id
+         << " - Course: "
+         << courses[count - 1]->getCourseName()
+         << " - CGPA: "
+         << cgpa
+         << endl;
+
+
+    // Return Course Record
+    cout << "\nReturning all course records...\n";
+
+    for(int i = 0; i < count; i++)
+    {
+        cout << "\n"
+             << courses[i]->getCourseName()
+             << " record deleted successfully.\n";
+
+        // Free Memory
+        delete courses[i];
+    }
+
+
+    cout << "\nMemory released successfully.\n";
+
+
+    // Close File
+    file.close();
+
+    cout << "\nResults have been saved to university_results.txt"
+         << endl;
+
+
+    return 0;
+}
